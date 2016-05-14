@@ -10,6 +10,7 @@
 package jflex;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -545,7 +546,7 @@ final public class Emitter {
   }
 
 
-  private void emitCharMapInitFunction(int packedCharMapPairs) {
+  private void emitCharMapInitFunction() {
 
     CharClasses cl = parser.getCharClasses();
     
@@ -559,10 +560,14 @@ final public class Emitter {
     println("   * @return         the unpacked character translation table");
     println("   */");
     println("  private static char [] zzUnpackCMap(String packed) {");
-    println("    char [] map = new char[0x" + Integer.toHexString(cl.getMaxCharCode() + 1) + "];");
+    println("    int size = 0;");
+    println("    for (int i = 0, length = packed.length(); i < length; i += 2) {");
+    println("      size += packed.charAt(i);");
+    println("    }");
+    println("    char[] map = new char[size];");
     println("    int i = 0;  /* index in packed string  */");
     println("    int j = 0;  /* index in unpacked array */");
-    println("    while (i < " + 2 * packedCharMapPairs + ") {");
+    println("    while (i < packed.length()) {");
     println("      int  count = packed.charAt(i++);");
     println("      char value = packed.charAt(i++);");
     println("      do map[j++] = value; while (--count > 0);");
@@ -614,84 +619,45 @@ final public class Emitter {
    * the number of char map array entries per value is
    * ceil(count / 0xFFFF)
    */
-  private int emitCharMapArray() {       
+  private void emitCharMapArray() {
     CharClasses cl = parser.getCharClasses();
 
     if ( cl.getMaxCharCode() < 256 ) {
       emitCharMapArrayUnPacked();
-      return 0; // the char map array will not be packed
     }
 
     // ignores cl.getMaxCharCode(), emits all intervals instead
 
     intervals = cl.getIntervals();
-    
+
+    char[] exploded = new char[cl.getMaxCharCode() + 1];
+    for (int i = 0, k = 0; i < intervals.length && k < exploded.length; i ++) {
+      int count = intervals[i].end - intervals[i].start + 1;
+      int value = colMap[intervals[i].charClass];
+
+      while (count-- > 0) {
+        exploded[k++] = (char) value;
+      }
+    }
+
+    int[] sizes = EmitterCM.findBestSizes(exploded, 3);
+    Object[] o = EmitterCM.generateForSizes(exploded, sizes);
+    int totalSize = EmitterCM.getTotalBytes((char[][]) o[0], sizes, (int[]) o[1]);
+
     println("");
     println("  /** ");
     println("   * Translates characters to character classes");
+    println("   * Chosen bits are " + Arrays.toString(sizes));
+    println("   * Total runtime size is " + totalSize + " bytes");
     println("   */");
-    println("  private static final String ZZ_CMAP_PACKED = ");
-  
-    int n = 0;  // numbers of entries in current line    
-    print("    \"");
-    
-    int i = 0, numPairs = 0;
-    int count, value;
-    while ( i < intervals.length ) {
-      count = intervals[i].end-intervals[i].start+1;
-      value = colMap[intervals[i].charClass];
 
-      // count could be >= 0x10000
-      while (count > 0xFFFF) {
-        printUC(0xFFFF);
-        printUC(value);
-        count -= 0xFFFF;
-        numPairs++;
-        n++;       
-      }
-      numPairs++;
-      printUC(count);
-      printUC(value);
-
-      if (i < intervals.length-1) {
-        if ( ++n >= 10 ) { 
-          println("\"+");
-          print("    \"");
-          n = 0;
-        }
-      }
-
-      i++;
-    }
-      
-    println("\";");
+    println("  public static int ZZ_CMAP(int ch) {\n" +
+            "    return " + EmitterCM.genAccess("ZZ_CMAP_" + "A", "ch", 16, sizes, (int[]) o[3], (int[]) o[4], (boolean[]) o[2]) + ";\n" +
+            "  }");
     println();
 
-    println("  /** ");
-    println("   * Translates characters to character classes");
-    println("   */");
-    println("  private static final char [] ZZ_CMAP = zzUnpackCMap(ZZ_CMAP_PACKED);");
-    println();
-    return numPairs;
-  }
-
-
-  /**
-   * Print number as octal/unicode escaped string character.
-   * 
-   * @param c   the value to print
-   * @prec  0 <= c <= 0xFFFF 
-   */
-  private void printUC(int c) {
-    if (c > 255) {
-      out.print("\\u");
-      if (c < 0x1000) out.print("0");
-      out.print(Integer.toHexString(c));
-    }
-    else {
-      out.print("\\");
-      out.print(Integer.toOctalString(c));
-    }    
+    String tables = EmitterCM.genTables((char[][]) o[0], sizes, (int[]) o[1], (boolean[]) o[2]);
+    println(tables);
   }
 
 
@@ -1074,7 +1040,11 @@ final public class Emitter {
 
   
   private void emitGetRowMapNext() {
-    println("          int zzNext = zzTransL[ zzRowMapL[zzState] + zzCMapL[zzInput] ];");
+    CharClasses cl = parser.getCharClasses();
+
+    boolean unpacked = cl.getMaxCharCode() < 256;
+
+    println("          int zzNext = zzTransL[ zzRowMapL[zzState] + "+ (unpacked? "zzCMapL[zzInput]" : "ZZ_CMAP(zzInput)") +" ];");
     println("          if (zzNext == "+DFA.NO_TARGET+") break zzForAction;");
     println("          zzState = zzNext;");
     println();
@@ -1158,6 +1128,9 @@ final public class Emitter {
   }
 
   private void emitActions() {
+    CharClasses cl = parser.getCharClasses();
+    boolean unpacked = cl.getMaxCharCode() < 256;
+
     println("        switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {");
 
     int i = actionTable.size()+1;
@@ -1191,7 +1164,7 @@ final public class Emitter {
         println("                zzFinL[zzFPos] = ((zzAttrL[zzFState] & 1) == 1);");
         println("                zzInput = Character.codePointAt(zzBufferL, zzFPos/*, zzMarkedPos*/);");
         println("                zzFPos += Character.charCount(zzInput);");
-        println("                zzFState = zzTransL[ zzRowMapL[zzFState] + zzCMapL[zzInput] ];");
+        println("                zzFState = zzTransL[ zzRowMapL[zzFState] + " + (unpacked ? "zzCMapL[zzInput]" : "ZZ_CMAP(zzInput)") + " ];");
         println("              }");
         println("              if (zzFState != -1) { zzFinL[zzFPos++] = ((zzAttrL[zzFState] & 1) == 1); } ");
         println("              while (zzFPos <= zzMarkedPos) {");
@@ -1203,7 +1176,7 @@ final public class Emitter {
         println("              while (!zzFinL[zzFPos] || (zzAttrL[zzFState] & 1) != 1) {");
         println("                zzInput = Character.codePointBefore(zzBufferL, zzFPos/*, zzStartRead*/);");
         println("                zzFPos -= Character.charCount(zzInput);");
-        println("                zzFState = zzTransL[ zzRowMapL[zzFState] + zzCMapL[zzInput] ];");
+        println("                zzFState = zzTransL[ zzRowMapL[zzFState] + " + (unpacked ? "zzCMapL[zzInput]" : "ZZ_CMAP(zzInput)") + " ];");
         println("              };");
         println("              zzMarkedPos = zzFPos;");
         println("            }");
@@ -1421,7 +1394,7 @@ final public class Emitter {
 
     emitLexicalStates();
    
-    int packedCharMapPairs = emitCharMapArray();
+    emitCharMapArray();
     
     emitActionTable();
     
@@ -1445,7 +1418,7 @@ final public class Emitter {
     
     emitConstructorDecl();
         
-    emitCharMapInitFunction(packedCharMapPairs);
+    emitCharMapInitFunction();
 
     if (scanner.debugOption) {
       println("");
