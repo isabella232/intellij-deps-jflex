@@ -1,14 +1,8 @@
-[![Build Status](https://travis-ci.org/jflex-de/jflex.svg?branch=master)](https://travis-ci.org/jflex-de/jflex)
+[![official JetBrains project](http://jb.gg/badges/official.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
 
-This is the JFlex git repository. The toplevel contains
+A [fork of JFlex](https://github.com/jflex-de/jflex) [lexer generator](http://jflex.de) for IntelliJ Platform API.
 
- * JFlex, the scanner/lexer generator for Java
- * the JFlex maven plugin, that helps to integrate JFlex in your project
- * the JFlex unicode maven plugin, used for compiling JFlex
- * the regression test suite for JFlex,
- * the Markdown sources for the user manual in `docs/`
-
-For documentation and more information see the [JFlex web site](http://jflex.de)
-
-JFlex is free softwware, contributions are welcome.
-See the file [CONTRIBUTING.md](CONTRIBUTING.md) for instructions.
+Changes Summary
+---------------
+ * Memory efficient state transition tables 
+ * java.lang.CharSequence instead of char arrays
