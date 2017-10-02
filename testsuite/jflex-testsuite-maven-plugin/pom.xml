@@ -45,6 +45,9 @@
         <groupId>de.jflex</groupId>
         <artifactId>jflex-maven-plugin</artifactId>
         <version>1.7.0-SNAPSHOT</version>
+        <configuration>
+          <skeleton>src/main/jflex/TestLoader.skeleton</skeleton>
+        </configuration>
         <executions>
           <execution>
             <goals>
