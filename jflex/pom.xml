@@ -247,28 +247,4 @@
       </plugins>
     </pluginManagement>
   </build>
-
-  <profiles>
-    <profile>
-      <id>generate-unicode-properties</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>de.jflex</groupId>
-            <artifactId>jflex-unicode-maven-plugin</artifactId>
-            <version>${project.version}</version>
-            <executions>
-              <execution>
-                <id>generate</id>
-                <phase>generate-sources</phase>
-                <goals>
-                  <goal>generate-unicode-properties</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 </project>
