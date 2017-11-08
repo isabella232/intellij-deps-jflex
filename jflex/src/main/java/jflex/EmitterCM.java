@@ -3,8 +3,8 @@ package jflex;
 import java.io.StringWriter;
 
 /**
- * Based on generatecharacter/GenerateCharacter.java
- * from http://hg.openjdk.java.net tailored to our needs
+ * Based on generatecharacter/GenerateCharacter.java from http://hg.openjdk.java.net tailored to our
+ * needs
  *
  * @author gregsh
  */
@@ -22,7 +22,8 @@ class EmitterCM {
     return minSizes[0];
   }
 
-  private static void permuteSizesAndFindBest(char[] map, int[] sizes, int[] curMin, int[][] minSizes) {
+  private static void permuteSizesAndFindBest(
+      char[] map, int[] sizes, int[] curMin, int[][] minSizes) {
     int bitsTotal = 0; // 21 for 0x10ffff
     for (int i = map.length; i > 0; i >>= 1) {
       bitsTotal++;
@@ -30,21 +31,24 @@ class EmitterCM {
 
     int last = sizes.length - 1;
 
-    for (int j = last, sum = 0; true ; j = last, sum = 0) {
+    for (int j = last, sum = 0; true; j = last, sum = 0) {
       for (int i = 0; i <= last; i++) {
-        if (sizes[i] == 0 && i != last) { sum = 0; break; }
+        if (sizes[i] == 0 && i != last) {
+          sum = 0;
+          break;
+        }
         sum += sizes[i];
       }
       if (sum == bitsTotal) {
         int newMin = tryGenerateTables(map, sizes);
-        //System.out.println(Arrays.toString(sizes) + " -> " + newMin);
+        // System.out.println(Arrays.toString(sizes) + " -> " + newMin);
         if (curMin[0] > newMin) {
           curMin[0] = newMin;
           minSizes[0] = sizes.clone();
         }
       }
 
-      while (j >= 0 && sizes[j] == bitsTotal) j --;
+      while (j >= 0 && sizes[j] == bitsTotal) j--;
       if (j < 0) break;
 
       for (int j0 = j; j0 < last; j0++) {
@@ -57,11 +61,10 @@ class EmitterCM {
   private static int tryGenerateTables(char[] map, int[] sizes) {
     try {
       Object[] o = generateForSizes(map, sizes);
-      char[][] tables = (char[][])o[0];
-      int[] bytes = (int[])o[1];
+      char[][] tables = (char[][]) o[0];
+      int[] bytes = (int[]) o[1];
       return getTotalBytes(tables, sizes, bytes);
-    }
-    catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException e) {
       return Integer.MAX_VALUE;
     }
   }
@@ -74,7 +77,6 @@ class EmitterCM {
     totalBytes += ((((tables[sizes.length - 1].length * 32) + 31) >> 5) << 1);
     return totalBytes;
   }
-
 
   private static char[][] buildTable(char[] map, int size) {
     int n = map.length;
@@ -95,18 +97,17 @@ class EmitterCM {
       for (int j = 0; j < ptr; j += m) {
         // Find out whether there is already a block just like it in the buffer.
         for (int k = 0; k < m; k++) {
-          if (buffer[j + k] != map[i + k])
-            continue MIDDLE;
+          if (buffer[j + k] != map[i + k]) continue MIDDLE;
         }
         // There is a block just like it at position j, so just
         // put its index into the new map (thereby sharing it).
-        newmap[i >> size] = (char)(j >> size);
+        newmap[i >> size] = (char) (j >> size);
         continue OUTER;
       } // end MIDDLE
       // There is no block just like it already, so add it to
       // the buffer and put its index into the new map.
       System.arraycopy(map, i, buffer, ptr, m);
-      newmap[i >> size] = (char)(ptr >> size);
+      newmap[i >> size] = (char) (ptr >> size);
       ptr += m;
     } // end OUTER
     // Now we know how char the compressed table should be,
@@ -114,9 +115,8 @@ class EmitterCM {
     char[] newdata = new char[ptr];
     System.arraycopy(buffer, 0, newdata, 0, ptr);
     // Return the new map and the new data table.
-    return new char[][]{newmap, newdata};
+    return new char[][] {newmap, newdata};
   }
-
 
   static Object[] generateForSizes(char[] map, int[] sizes) {
     int sum = 0;
@@ -126,15 +126,15 @@ class EmitterCM {
       sum += sizes[k];
     }
     if ((1 << sum) < map.length || (1 << (sum - 1)) >= map.length) {
-      throw new IllegalArgumentException("Bit field widths total to " + sum +
-                               ": wrong total for map of size " + map.length);
+      throw new IllegalArgumentException(
+          "Bit field widths total to " + sum + ": wrong total for map of size " + map.length);
     }
     // need a table for each set of lookup bits in char
     char[][] tables = new char[sizes.length][];
     // the last table is the map
     tables[sizes.length - 1] = map;
     for (int j = sizes.length - 1; j > 0; j--) {
-      //if (verbose && bins == 0)
+      // if (verbose && bins == 0)
       //  System.err.println("Building map " + (j + 1) + " of bit width " + sizes[j]);
       char[][] temp = buildTable(tables[j], sizes[j]);
       tables[j - 1] = temp[0];
@@ -149,20 +149,16 @@ class EmitterCM {
       if (len > 0x100 && (len >> size) <= 0x100) {
         len >>= size;
         preshifted[j] = false;
-      }
-      else if (len > 0x10000 && (len >> size) <= 0x10000) {
+      } else if (len > 0x10000 && (len >> size) <= 0x10000) {
         len >>= size;
         preshifted[j] = false;
-      }
-      else {
+      } else {
         preshifted[j] = true;
       }
       if (len > 0x7F && len <= 0xFF) {
-      }
-      else if (len > 0x7FFF && len <= 0xFFFF) {
+      } else if (len > 0x7FFF && len <= 0xFFFF) {
         zeroextend[j] = 0xFFFF;
-      }
-      else {
+      } else {
         zeroextend[j] = 0;
       }
       if (len <= 0x100) bytes[j] = 1;
@@ -173,10 +169,17 @@ class EmitterCM {
     zeroextend[sizes.length - 1] = 0;
     bytes[sizes.length - 1] = 0;
 
-    return new Object[] { tables, bytes, preshifted, shifts, zeroextend};
+    return new Object[] {tables, bytes, preshifted, shifts, zeroextend};
   }
 
-  static String genAccess(String tbl, String var, int bits, int[] sizes, int[] shifts, int[] zeroextend, boolean[] preshifted) {
+  static String genAccess(
+      String tbl,
+      String var,
+      int bits,
+      int[] sizes,
+      int[] shifts,
+      int[] zeroextend,
+      boolean[] preshifted) {
     String access = null;
     int bitoffset = bits == 1 ? 5 : bits == 2 ? 4 : bits == 4 ? 3 : 0;
     for (int k = 0; k < sizes.length; k++) {
@@ -185,37 +188,47 @@ class EmitterCM {
       int shift = shifts[k] + offset;
       String shifted = (shift == 0) ? var : "(" + var + ">>" + shift + ")";
       int mask = (1 << (sizes[k] - offset)) - 1;
-      String masked = (k == 0) ? shifted :
-              "(" + shifted + "&0x" + Integer.toHexString(mask) + ")";
-      String index = (k == 0) ? masked :
-              (mask == 0) ? access : "(" + access + "|" + masked + ")";
-      String indexNoParens = (index.charAt(0) != '(') ? index :
-              index.substring(1, index.length() - 1);
+      String masked = (k == 0) ? shifted : "(" + shifted + "&0x" + Integer.toHexString(mask) + ")";
+      String index = (k == 0) ? masked : (mask == 0) ? access : "(" + access + "|" + masked + ")";
+      String indexNoParens =
+          (index.charAt(0) != '(') ? index : index.substring(1, index.length() - 1);
       String tblname = (k == sizes.length - 1) ? tbl : tableName;
       String fetched = tblname + "[" + indexNoParens + "]";
-      String zeroextended = (zeroextend[k] == 0) ? fetched :
-              "(" + fetched + "&0x" + Integer.toHexString(zeroextend[k]) + ")";
-      int adjustment = preshifted[k] ? 0 :
-              sizes[k + 1] - ((k == sizes.length - 2) ? bitoffset : 0);
-      String adjusted = (preshifted[k] || adjustment == 0) ? zeroextended :
-              "(" + zeroextended + "<<" + adjustment + ")";
-      String bitshift = (bits == 1) ? "(" + var + "&0x1F)" :
-              (bits == 2) ? "((" + var + "&0xF)<<1)" :
-                      (bits == 4) ? "((" + var + "&7)<<2)" : null;
-      String extracted = ((k < sizes.length - 1) || (bits >= 8)) ? adjusted :
-              "((" + adjusted + ">>" + bitshift + ")&" +
-                      (bits == 4 ? "0xF" : String.valueOf((1 << bits) - 1)) + ")";
+      String zeroextended =
+          (zeroextend[k] == 0)
+              ? fetched
+              : "(" + fetched + "&0x" + Integer.toHexString(zeroextend[k]) + ")";
+      int adjustment = preshifted[k] ? 0 : sizes[k + 1] - ((k == sizes.length - 2) ? bitoffset : 0);
+      String adjusted =
+          (preshifted[k] || adjustment == 0)
+              ? zeroextended
+              : "(" + zeroextended + "<<" + adjustment + ")";
+      String bitshift =
+          (bits == 1)
+              ? "(" + var + "&0x1F)"
+              : (bits == 2)
+                  ? "((" + var + "&0xF)<<1)"
+                  : (bits == 4) ? "((" + var + "&7)<<2)" : null;
+      String extracted =
+          ((k < sizes.length - 1) || (bits >= 8))
+              ? adjusted
+              : "(("
+                  + adjusted
+                  + ">>"
+                  + bitshift
+                  + ")&"
+                  + (bits == 4 ? "0xF" : String.valueOf((1 << bits) - 1))
+                  + ")";
       access = extracted;
     }
     return access;
   }
 
-
   static String genTables(char[][] tables, int[] sizes, int[] bytes, boolean[] preshifted) {
     StringBuffer result = new StringBuffer();
 
     for (int k = 0; k < sizes.length - 1; k++) {
-      String tableName = "ZZ_CMAP_" + String.valueOf((char)('Z' - k));
+      String tableName = "ZZ_CMAP_" + String.valueOf((char) ('Z' - k));
       genTable(result, tableName, tables[k], 0, bytes[k] << 3, preshifted[k], sizes[k + 1]);
       result.append("\n");
     }
@@ -224,9 +237,14 @@ class EmitterCM {
     return result.toString();
   }
 
-  private static void genTable(StringBuffer result, String name,
-                               char[] table, int extract, int bits,
-                               boolean preshifted, int shift) {
+  private static void genTable(
+      StringBuffer result,
+      String name,
+      char[] table,
+      int extract,
+      int bits,
+      boolean preshifted,
+      int shift) {
 
     String atype = "char";
     int entriesPerChar = 1;
@@ -234,7 +252,12 @@ class EmitterCM {
     boolean shiftEntries = preshifted && shift != 0;
 
     result.append("  /*");
-    result.append(" The ").append(name).append(" table has ").append(table.length).append(" entries */\n");
+    result
+        .append(" The ")
+        .append(name)
+        .append(" table has ")
+        .append(table.length)
+        .append(" entries */\n");
     result.append("  static final ");
     result.append(atype);
     result.append(" ").append(name).append("[");
@@ -281,8 +304,7 @@ class EmitterCM {
     public StringWriter append(char c) {
       if (cur == c && count <= 0xffff) {
         count++;
-      }
-      else {
+      } else {
         if (count > 0) {
           appendImpl((char) count);
           appendImpl(cur);
@@ -318,8 +340,7 @@ class EmitterCM {
         super.append("\\u");
         if (c < 0x1000) super.append("0");
         super.append(Integer.toHexString(c));
-      }
-      else {
+      } else {
         super.append("\\");
         super.append(Integer.toOctalString(c));
       }

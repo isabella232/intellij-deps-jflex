@@ -1,8 +1,6 @@
 package jflex;
 
-/**
- * Internal-use class to represent code point intervals.
- */
+/** Internal-use class to represent code point intervals. */
 public class NamedRange implements Comparable<NamedRange> {
   int start;
   int end;
@@ -21,17 +19,17 @@ public class NamedRange implements Comparable<NamedRange> {
 
   public boolean equals(NamedRange other) {
     return null != other
-           && (start == other.start && end == other.end
-               && ((null == name && null == other.name)
-                   || (null != name && name.equals(other.name))));
+        && (start == other.start
+            && end == other.end
+            && ((null == name && null == other.name) || (null != name && name.equals(other.name))));
   }
 
   public int compareTo(NamedRange other) {
     int comparison = 0;
     if (null != other) {
-      comparison = (new Integer(start)).compareTo(other.start);
+      comparison = Integer.valueOf(start).compareTo(other.start);
       if (0 == comparison) {
-        comparison = (new Integer(end)).compareTo(other.end);
+        comparison = Integer.valueOf(end).compareTo(other.end);
       }
     }
     return comparison;
