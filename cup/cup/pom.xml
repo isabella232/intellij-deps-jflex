@@ -6,7 +6,7 @@
   <artifactId>cup</artifactId>
   <packaging>jar</packaging>
   <parent>
-    <groupId>de.jflex</groupId>
+    <groupId>org.jetbrains.intellij.deps.jflex</groupId>
     <artifactId>cup-parent</artifactId>
     <version>11b</version>
     <relativePath>../pom.xml</relativePath>
