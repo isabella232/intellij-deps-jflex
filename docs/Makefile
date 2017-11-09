@@ -1,7 +1,7 @@
 # Makefile for jflex documentation (ps + pdf + html)
 
 #VERSION=1.6.1
-VERSION=1.7.0-SNAPSHOT
+VERSION=1.7.0
 RELEASE_DATE=16 March 2015
 UNICODE_VER=7.0
 
