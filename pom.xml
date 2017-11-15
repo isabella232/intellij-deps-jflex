@@ -99,6 +99,13 @@
     <url>scm:git:git@github.com:jflex-de/jflex.git</url>
   </scm>
 
+  <distributionManagement>
+    <repository>
+      <id>bintray-jetbrains-intellij-third-party-dependencies</id>
+      <url>https://api.bintray.com/maven/jetbrains/intellij-third-party-dependencies/jflex/;publish=1</url>
+    </repository>
+  </distributionManagement>
+  
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -320,13 +327,6 @@
       </plugin>
     </plugins>
   </reporting>
-
-  <distributionManagement>
-    <site>
-      <id>local</id>
-      <url>mvn</url>
-    </site>
-  </distributionManagement>
 
   <profiles>
     <profile>
