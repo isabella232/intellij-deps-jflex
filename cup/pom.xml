@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.jetbrains.intellij.deps.jflex</groupId>
   <artifactId>cup-parent</artifactId>
-  <version>11b</version>
+  <version>1.7.0-1</version>
   <packaging>pom</packaging>
   <name>CUP</name>
   <url>http://www2.cs.tum.edu/projects/cup/</url>

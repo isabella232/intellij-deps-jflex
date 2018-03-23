@@ -1,5 +1,5 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * JFlex 1.7.0-1-SNAPSHOT                                                    *
+ * JFlex 1.7.0-1                                                             *
  * Copyright (C) 1998-2015  Gerwin Klein <lsf@jflex.de>                    *
  * All rights reserved.                                                    *
  *                                                                         *
@@ -18,7 +18,7 @@ package jflex;
  * <p>For instance: a* is new RegExp1(sym.STAR, 'a');
  *
  * @author Gerwin Klein
- * @version JFlex 1.7.0-1-SNAPSHOT
+ * @version JFlex 1.7.0-1
  */
 public class RegExp1 extends RegExp {
 
