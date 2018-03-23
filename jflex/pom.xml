@@ -85,7 +85,7 @@
         <groupId>de.jflex</groupId>
         <artifactId>jflex-maven-plugin</artifactId>
         <!-- bootstrap with previous version -->
-        <version>1.7.0</version>
+        <version>1.6.1</version>
         <executions>
           <execution>
             <goals>
