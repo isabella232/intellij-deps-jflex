@@ -195,7 +195,7 @@ public class Exec {
                   ".",
                   new ArrayList<String>(),
                   files,
-                  "1.7.0-SNAPSHOT",
+                  "1.7.0-1-SNAPSHOT",
                   "UTF-8"));
     } catch (UnsupportedEncodingException e) {
       System.out.println("UTF-8 is not a supported encoding.");
