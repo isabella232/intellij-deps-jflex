@@ -1,6 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * JFlex 1.7.0-1-SNAPSHOT                                                    *
- * Copyright (C) 1998-2015  Gerwin Klein <lsf@jflex.de>                    *
+ * JFlex 1.7.0                                                             *
+ * Copyright (C) 1998-2018  Gerwin Klein <lsf@jflex.de>                    *
  * All rights reserved.                                                    *
  *                                                                         *
  * License: BSD                                                            *
@@ -16,7 +16,7 @@ import java.util.List;
  * Character Classes.
  *
  * @author Gerwin Klein
- * @version JFlex 1.7.0-1-SNAPSHOT
+ * @version JFlex 1.7.0
  */
 public class CharClasses {
 
@@ -65,7 +65,7 @@ public class CharClasses {
 
     maxCharUsed = maxCharCode;
     this.scanner = scanner;
-    classes = new ArrayList<IntCharSet>();
+    classes = new ArrayList<>();
     classes.add(new IntCharSet(new Interval(0, maxCharCode)));
   }
 

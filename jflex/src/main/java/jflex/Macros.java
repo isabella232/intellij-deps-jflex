@@ -1,6 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * JFlex 1.7.0-1-SNAPSHOT                                                    *
- * Copyright (C) 1998-2015  Gerwin Klein <lsf@jflex.de>                    *
+ * JFlex 1.7.0                                                             *
+ * Copyright (C) 1998-2018  Gerwin Klein <lsf@jflex.de>                    *
  * All rights reserved.                                                    *
  *                                                                         *
  * License: BSD                                                            *
@@ -20,7 +20,7 @@ import java.util.Map;
  * <p>Maps macros to their (expanded) definitions, detects cycles and unused macros.
  *
  * @author Gerwin Klein
- * @version JFlex 1.7.0-1-SNAPSHOT
+ * @version JFlex 1.7.0
  */
 public final class Macros {
 
@@ -32,8 +32,8 @@ public final class Macros {
 
   /** Creates a new macro expander. */
   public Macros() {
-    macros = new HashMap<String, RegExp>();
-    used = new HashMap<String, Boolean>();
+    macros = new HashMap<>();
+    used = new HashMap<>();
   }
 
   /**
@@ -84,7 +84,7 @@ public final class Macros {
    */
   public List<String> unused() {
 
-    List<String> unUsed = new ArrayList<String>();
+    List<String> unUsed = new ArrayList<>();
 
     for (String name : used.keySet()) {
       Boolean isUsed = used.get(name);

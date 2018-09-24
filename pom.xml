@@ -4,9 +4,9 @@
   <groupId>org.jetbrains.intellij.deps.jflex</groupId>
   <artifactId>jflex-parent</artifactId>
   <name>JFlex parent and aggregator POM</name>
-  <version>1.7.0-1-SNAPSHOT</version>
+  <version>1.7.0-2</version>
   <packaging>pom</packaging>
-  <url>http://jflex.de/</url>
+  <url>https://github.com/JetBrains/intellij-deps-jflex</url>
   <description>JFlex parent and aggregator POM</description>
   <licenses>
     <license>
@@ -20,7 +20,7 @@
     <developer>
       <id>lsf37</id>
       <name>Gerwin Klein</name>
-      <email>gerwin.klein@nicta.com.au</email>
+      <email>lsf@jflex.de</email>
       <roles>
         <role>founder</role>
         <role>developer</role>
@@ -49,6 +49,7 @@
 
   <modules>
     <module>cup</module>
+    <module>cup-maven-plugin</module>
     <!--<module>jflex-unicode-maven-plugin</module>-->
     <module>jflex</module>
     <!--<module>jflex-maven-plugin</module>-->
@@ -80,6 +81,7 @@
 
   <properties>
     <cup.version>11b</cup.version>
+    <github.global.server>github</github.global.server>
     <jflex.jdk.version>1.7</jflex.jdk.version>
     <!-- 3.0.x fails to compile flex-maven-plugin https://issues.apache.org/jira/browse/MNG-5346 -->
     <maven.version>3.5.2</maven.version>
@@ -96,7 +98,7 @@
   <scm>
     <connection>scm:git:git@github.com:jflex-de/jflex.git</connection>
     <developerConnection>scm:git:git@github.com:jflex-de/jflex.git</developerConnection>
-    <url>scm:git:git@github.com:jflex-de/jflex.git</url>
+    <url>https://github.com/jflex-de/jflex</url>
   </scm>
 
   <distributionManagement>
@@ -105,18 +107,38 @@
       <url>https://api.bintray.com/maven/jetbrains/intellij-third-party-dependencies/jflex/;publish=1</url>
     </repository>
   </distributionManagement>
-  
+
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>20.0</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.truth</groupId>
+        <artifactId>truth</artifactId>
+        <version>0.36</version>
+      </dependency>
       <dependency>
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
         <version>2.6</version>
       </dependency>
       <dependency>
+        <groupId>org.jetbrains.intellij.deps.jflex</groupId>
+        <artifactId>cup</artifactId>
+        <version>${cup.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jetbrains.intellij.deps.jflex</groupId>
+        <artifactId>cup_runtime</artifactId>
+        <version>${cup.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.apache.ant</groupId>
         <artifactId>ant</artifactId>
-        <version>1.7.0</version>
+        <version>1.9.7</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven</groupId>
@@ -148,6 +170,12 @@
         <artifactId>junit</artifactId>
         <version>4.12</version>
       </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>2.11.0</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -155,16 +183,22 @@
     <pluginManagement>
       <plugins>
         <plugin>
-          <artifactId>maven-antrun-plugin</artifactId>
-          <version>1.7</version>
+          <groupId>org.jetbrains.intellij.deps.jflex</groupId>
+          <artifactId>cup-maven-plugin</artifactId>
+          <version>1.0</version>
+        </plugin>
+        <plugin>
+          <groupId>com.coveo</groupId>
+          <artifactId>fmt-maven-plugin</artifactId>
+          <version>2.2.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.1</version>
+          <version>3.7.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-deploy-plugin</artifactId>
-          <version>2.8</version>
+          <version>2.8.2</version>
         </plugin>
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
@@ -201,13 +235,6 @@
               </configuration>
             </execution>
           </executions>
-        </plugin>
-        <plugin>
-          <artifactId>maven-gpg-plugin</artifactId>
-          <version>1.6</version>
-          <configuration>
-            <keyname>84A70085</keyname>
-          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
@@ -275,22 +302,12 @@
           </execution>
         </executions>
         <configuration>
-          <topSiteURL>http://jflex.de/</topSiteURL>
-          <stagingDirectory>/tmp/maven-staging-site</stagingDirectory>
+          <topSiteURL>http://jflex-de.github.io/</topSiteURL>
+          <stagingDirectory>${project.parent.basedir}/target/maven-staging-site</stagingDirectory>
+          <!-- We use github instead -->
+          <skip>true</skip>
+          <skipDeploy>true</skipDeploy>
         </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>2.7</version>
-        <executions>
-          <execution>
-            <id>site</id>
-            <goals>
-              <goal>index</goal>
-              <goal>summary</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>
@@ -299,17 +316,25 @@
     <plugins>
       <plugin>
         <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.7</version>
         <reportSets>
           <reportSet>
             <reports>
               <report>index</report>
               <report>summary</report>
+              <report>plugins</report>
+              <report>dependencies</report>
+              <report>plugins</report>
             </reports>
           </reportSet>
         </reportSets>
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <!-- Timestamps create annoying diff on gh-pages -->
+          <notimestamp>true</notimestamp>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -330,6 +355,62 @@
 
   <profiles>
     <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <configuration>
+              <keyname>84A70085</keyname>
+            </configuration>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>no-doclint</id>
+      <activation>
+        <property>
+          <name>!env.CI</name>
+        </property>
+      </activation>
+      <properties>
+        <additionalparam>-Xdoclint:none</additionalparam>
+      </properties>
+    </profile>
+    <profile>
       <id>error-prone</id>
       <activation>
         <jdk>[1.8,)</jdk>
@@ -338,7 +419,6 @@
         <plugins>
           <plugin>
             <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.3</version>
             <configuration>
               <compilerId>javac-with-errorprone</compilerId>
               <forceJavacCompilerUse>true</forceJavacCompilerUse>
@@ -363,34 +443,7 @@
               </dependency>
             </dependencies>
           </plugin>
-          <plugin>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <configuration>
-              <additionalparam>-Xdoclint:none</additionalparam>
-            </configuration>
-          </plugin>
-          <plugin>
-            <artifactId>maven-site-plugin</artifactId>
-            <configuration>
-              <reportPlugins>
-                <plugin>
-                  <configuration>
-                    <additionalparam>-Xdoclint:none</additionalparam>
-                  </configuration>
-                </plugin>
-              </reportPlugins>
-            </configuration>
-          </plugin>
         </plugins>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>com.coveo</groupId>
-              <artifactId>fmt-maven-plugin</artifactId>
-              <version>2.1.0</version>
-            </plugin>
-          </plugins>
-        </pluginManagement>
       </build>
     </profile>
     <profile>
@@ -435,6 +488,29 @@
                 <goals>
                   <goal>check</goal>
                 </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <!-- activate manually if you want to accelerate your build
+      mvn -Pfastbuild package
+      -->
+      <id>fastbuild</id>
+      <properties>
+        <maven.test.skip>true</maven.test.skip>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.coveo</groupId>
+            <artifactId>fmt-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>none</phase>
               </execution>
             </executions>
           </plugin>

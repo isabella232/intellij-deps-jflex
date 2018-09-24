@@ -1,6 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * JFlex 1.7.0-1-SNAPSHOT                                                    *
- * Copyright (C) 1998-2015  Gerwin Klein <lsf@jflex.de>                    *
+ * JFlex 1.7.0                                                             *
+ * Copyright (C) 1998-2018  Gerwin Klein <lsf@jflex.de>                    *
  * All rights reserved.                                                    *
  *                                                                         *
  * License: BSD                                                            *
@@ -15,7 +15,7 @@ import java.util.List;
  * Stores all rules of the specification for later access in RegExp -> NFA
  *
  * @author Gerwin Klein
- * @version JFlex 1.7.0-1-SNAPSHOT
+ * @version JFlex 1.7.0
  */
 public class RegExps {
 
@@ -48,13 +48,13 @@ public class RegExps {
 
   /** Constructor for RegExps. */
   public RegExps() {
-    states = new ArrayList<List<Integer>>();
-    regExps = new ArrayList<RegExp>();
-    actions = new ArrayList<Action>();
-    BOL = new ArrayList<Boolean>();
-    look = new ArrayList<RegExp>();
-    lines = new ArrayList<Integer>();
-    look_entry = new ArrayList<Integer>();
+    states = new ArrayList<>();
+    regExps = new ArrayList<>();
+    actions = new ArrayList<>();
+    BOL = new ArrayList<>();
+    look = new ArrayList<>();
+    lines = new ArrayList<>();
+    look_entry = new ArrayList<>();
   }
 
   /**

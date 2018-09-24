@@ -1,6 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * JFlex 1.7.0-1-SNAPSHOT                                                    *
- * Copyright (C) 1998-2015  Gerwin Klein <lsf@jflex.de>                    *
+ * JFlex 1.7.0                                                             *
+ * Copyright (C) 1998-2018  Gerwin Klein <lsf@jflex.de>                    *
  * All rights reserved.                                                    *
  *                                                                         *
  * License: BSD                                                            *
@@ -18,7 +18,7 @@ import java.util.List;
  * <p>This base class has no content other than its type.
  *
  * @author Gerwin Klein
- * @version JFlex 1.7.0-1-SNAPSHOT
+ * @version JFlex 1.7.0
  */
 public class RegExp {
 
@@ -254,7 +254,7 @@ public class RegExp {
    */
   public RegExp anyChar() {
     // FIXME: there is some code duplication here with the parser
-    List<Interval> list = new ArrayList<Interval>();
+    List<Interval> list = new ArrayList<>();
     list.add(new Interval(0, CharClasses.maxChar));
     return new RegExp1(sym.CCLASS, list);
   }

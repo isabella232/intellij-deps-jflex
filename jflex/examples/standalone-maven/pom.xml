@@ -19,17 +19,23 @@ of "hello" by "hello &lt;name&gt; !".</description>
   <build>
     <plugins>
       <plugin>
-        <groupId>de.jflex</groupId>
+        <groupId>org.jetbrains.intellij.deps.jflex</groupId>
         <artifactId>jflex-maven-plugin</artifactId>
-        <version>1.7.0-SNAPSHOT</version>
+        <version>1.7.0-2</version>
         <executions>
           <execution>
             <goals>
               <goal>generate</goal>
             </goals>
+            <configuration>
+              <encoding>utf-8</encoding>
+            </configuration>
           </execution>
         </executions>
       </plugin>
     </plugins>
   </build>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 </project>

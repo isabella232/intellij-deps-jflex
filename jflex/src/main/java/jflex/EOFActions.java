@@ -1,6 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * JFlex 1.7.0-1-SNAPSHOT                                                    *
- * Copyright (C) 1998-2015  Gerwin Klein <lsf@jflex.de>                    *
+ * JFlex 1.7.0                                                             *
+ * Copyright (C) 1998-2018  Gerwin Klein <lsf@jflex.de>                    *
  * All rights reserved.                                                    *
  *                                                                         *
  * License: BSD                                                            *
@@ -17,12 +17,12 @@ import java.util.Map;
  * A simple table to store EOF actions for each lexical state.
  *
  * @author Gerwin Klein
- * @version JFlex 1.7.0-1-SNAPSHOT
+ * @version JFlex 1.7.0
  */
 public class EOFActions {
 
   /** maps lexical states to actions */
-  private Map<Integer, Action> actions = new HashMap<Integer, Action>();
+  private Map<Integer, Action> actions = new HashMap<>();
 
   private Action defaultAction;
   private int numLexStates;

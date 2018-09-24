@@ -1,6 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * JFlex 1.7.0-1-SNAPSHOT                                                    *
- * Copyright (C) 1998-2015  Gerwin Klein <lsf@jflex.de>                    *
+ * JFlex 1.7.0                                                             *
+ * Copyright (C) 1998-2018  Gerwin Klein <lsf@jflex.de>                    *
  * All rights reserved.                                                    *
  *                                                                         *
  * License: BSD                                                            *
@@ -25,20 +25,15 @@ import jflex.Skeleton;
  * A dialog for setting JFlex options
  *
  * @author Gerwin Klein
- * @version JFlex 1.7.0-1-SNAPSHOT
+ * @version JFlex 1.7.0
  */
 public class OptionsDialog extends Dialog {
 
-  /** */
   private static final long serialVersionUID = 6807759416163314769L;
 
   private Frame owner;
 
-  private Button skelBrowse;
   private TextField skelFile;
-
-  private Button ok;
-  private Button defaults;
 
   private Checkbox dump;
   private Checkbox verbose;
@@ -76,9 +71,9 @@ public class OptionsDialog extends Dialog {
   /** setup. */
   public void setup() {
     // create components
-    ok = new Button("Ok");
-    defaults = new Button("Defaults");
-    skelBrowse = new Button(" Browse");
+    Button ok = new Button("Ok");
+    Button defaults = new Button("Defaults");
+    Button skelBrowse = new Button(" Browse");
     skelFile = new TextField();
     skelFile.setEditable(false);
 

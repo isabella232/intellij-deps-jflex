@@ -1,6 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * JFlex 1.7.0-1-SNAPSHOT                                                    *
- * Copyright (C) 1998-2015  Gerwin Klein <lsf@jflex.de>                    *
+ * JFlex 1.7.0                                                             *
+ * Copyright (C) 1998-2018  Gerwin Klein <lsf@jflex.de>                    *
  * All rights reserved.                                                    *
  *                                                                         *
  * License: BSD                                                            *
@@ -8,7 +8,12 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 package jflex;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +29,12 @@ import java.util.List;
  *
  * @see jflex.Emitter
  * @author Gerwin Klein
- * @version JFlex 1.7.0-1-SNAPSHOT
+ * @version JFlex 1.7.0
  */
 public class Skeleton {
 
   /** location of default skeleton */
-  private static final String DEFAULT_LOC = "jflex/idea-flex.skeleton"; // $NON-NLS-1$
+  private static final String DEFAULT_LOC = "jflex/skeleton.default"; // $NON-NLS-1$
 
   /** expected number of sections in the skeleton file */
   private static final int size = 21;
@@ -111,7 +116,7 @@ public class Skeleton {
    * @throws jflex.GeneratorException if the number of skeleton sections does not match
    */
   public static void readSkel(BufferedReader reader) throws IOException {
-    List<String> lines = new ArrayList<String>();
+    List<String> lines = new ArrayList<>();
     StringBuilder section = new StringBuilder();
 
     String ln;

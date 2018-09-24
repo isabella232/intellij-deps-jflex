@@ -25,7 +25,7 @@ import org.apache.tools.ant.Task;
  * JFlex ant task.
  *
  * @author Rafal Mantiuk
- * @version JFlex 1.7.0-1-SNAPSHOT
+ * @version JFlex 1.7.0
  */
 public class JFlexTask extends Task {
   private static final Pattern PACKAGE_PATTERN = Pattern.compile("package\\s+(\\S+)\\s*;");
@@ -90,11 +90,12 @@ public class JFlexTask extends Task {
     packageName = null;
     className = null;
 
-    LineNumberReader reader = new LineNumberReader(new FileReader(inputFile));
-    try {
+    try (LineNumberReader reader = new LineNumberReader(new FileReader(inputFile))) {
       while (className == null || packageName == null) {
         String line = reader.readLine();
-        if (line == null) break;
+        if (line == null) {
+          break;
+        }
 
         if (packageName == null) {
           Matcher matcher = PACKAGE_PATTERN.matcher(line);
@@ -115,8 +116,6 @@ public class JFlexTask extends Task {
       if (className == null) {
         className = "Yylex";
       }
-    } finally {
-      reader.close();
     }
   }
 
@@ -332,5 +331,14 @@ public class JFlexTask extends Task {
    */
   public void setLegacyDot(boolean b) {
     Options.legacy_dot = b;
+  }
+
+  /**
+   * Set the input encoding. If unset will use the JVM default.
+   *
+   * @param encodingName the name of the encoding to set (e.g. "utf-8").
+   */
+  public void setEncoding(String encodingName) {
+    Options.setEncoding(encodingName);
   }
 }

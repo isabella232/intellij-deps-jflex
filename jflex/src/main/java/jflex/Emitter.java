@@ -1,6 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * JFlex 1.7.0-1-SNAPSHOT                                                    *
- * Copyright (C) 1998-2015  Gerwin Klein <lsf@jflex.de>                    *
+ * JFlex 1.7.0                                                             *
+ * Copyright (C) 1998-2018  Gerwin Klein <lsf@jflex.de>                    *
  * All rights reserved.                                                    *
  *                                                                         *
  * License: BSD                                                            *
@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
  * <p>Table compression, String packing etc. is also done here.
  *
  * @author Gerwin Klein
- * @version JFlex 1.7.0-1-SNAPSHOT
+ * @version JFlex 1.7.0
  */
 public final class Emitter {
   private static final Pattern JAVADOC_COMMENT_AND_MAYBE_ANNOTATIONS_PATTERN =
@@ -62,7 +62,7 @@ public final class Emitter {
   private boolean[] colKilled;
 
   /** maps actions to their switch label */
-  private Map<Action, Integer> actionTable = new LinkedHashMap<Action, Integer>();
+  private Map<Action, Integer> actionTable = new LinkedHashMap<>();
 
   private CharClassInterval[] intervals;
 
@@ -84,7 +84,10 @@ public final class Emitter {
 
     Out.println("Writing code to \"" + outputFile + "\"");
 
-    this.out = new PrintWriter(new BufferedWriter(new FileWriter(outputFile)));
+    this.out =
+        new PrintWriter(
+            new BufferedWriter(
+                new OutputStreamWriter(new FileOutputStream(outputFile), Options.encoding)));
     this.parser = parser;
     this.scanner = parser.scanner;
     this.visibility = scanner.visibility;
@@ -275,6 +278,7 @@ public final class Emitter {
       print("    System.out.println( ");
       if (scanner.lineCount) print("\"line:\" + (yyline+1) + ");
       if (scanner.columnCount) print("\" col:\" + (yycolumn+1) + ");
+      if (scanner.charCount) print("\" char:\" + yychar + ");
       println("\" --\"+ yytext() + \"--\" + getTokenName(s.sym) + \"--\");");
       println("    return s;");
       println("  }");
@@ -617,6 +621,7 @@ public final class Emitter {
 
     if (cl.getMaxCharCode() < 256) {
       emitCharMapArrayUnPacked();
+      return;
     }
 
     // ignores cl.getMaxCharCode(), emits all intervals instead
@@ -862,10 +867,10 @@ public final class Emitter {
       println("        zzCh = Character.codePointAt(zzBufferL, zzCurrentPosL/*, zzMarkedPosL*/);");
       println("        zzCharCount = Character.charCount(zzCh);");
       println("        switch (zzCh) {");
-      println("        case '\\u000B':  // fall though");
-      println("        case '\\u000C':  // fall though");
-      println("        case '\\u0085':  // fall though");
-      println("        case '\\u2028':  // fall though");
+      println("        case '\\u000B':  // fall through");
+      println("        case '\\u000C':  // fall through");
+      println("        case '\\u0085':  // fall through");
+      println("        case '\\u2028':  // fall through");
       println("        case '\\u2029':");
       if (scanner.lineCount) println("          yyline++;");
       if (scanner.columnCount) println("          yycolumn = 0;");
@@ -922,11 +927,11 @@ public final class Emitter {
       println("      if (zzMarkedPosL > zzStartRead) {");
       println("        switch (zzBufferL.charAt(zzMarkedPosL-1)) {");
       println("        case '\\n':");
-      println("        case '\\u000B':  // fall though");
-      println("        case '\\u000C':  // fall though");
-      println("        case '\\u0085':  // fall though");
-      println("        case '\\u2028':  // fall though");
-      println("        case '\\u2029':  // fall though");
+      println("        case '\\u000B':  // fall through");
+      println("        case '\\u000C':  // fall through");
+      println("        case '\\u0085':  // fall through");
+      println("        case '\\u2028':  // fall through");
+      println("        case '\\u2029':  // fall through");
       println("          zzAtBOL = true;");
       println("          break;");
       println("        case '\\r': ");
@@ -976,7 +981,6 @@ public final class Emitter {
 
   private void emitGetRowMapNext() {
     CharClasses cl = parser.getCharClasses();
-
     boolean unpacked = cl.getMaxCharCode() < 256;
 
     println(
@@ -1152,6 +1156,7 @@ public final class Emitter {
         print("            System.out.println(");
         if (scanner.lineCount) print("\"line: \"+(yyline+1)+\" \"+");
         if (scanner.columnCount) print("\"col: \"+(yycolumn+1)+\" \"+");
+        if (scanner.charCount) print("\"char: \"+yychar+\" \"+");
         println("\"match: --\"+zzToPrintable(yytext())+\"--\");");
         print("            System.out.println(\"action [" + action.priority + "] { ");
         print(escapify(action.content));
@@ -1187,6 +1192,7 @@ public final class Emitter {
             print("              System.out.println(");
             if (scanner.lineCount) print("\"line: \"+(yyline+1)+\" \"+");
             if (scanner.columnCount) print("\"col: \"+(yycolumn+1)+\" \"+");
+            if (scanner.charCount) print("\"char: \"+yychar+\" \"+");
             println("\"match: <<EOF>>\");");
             print("              System.out.println(\"action [" + action.priority + "] { ");
             print(escapify(action.content));
@@ -1209,6 +1215,7 @@ public final class Emitter {
         print("                System.out.println(");
         if (scanner.lineCount) print("\"line: \"+(yyline+1)+\" \"+");
         if (scanner.columnCount) print("\"col: \"+(yycolumn+1)+\" \"+");
+        if (scanner.charCount) print("\"char: \"+yychar+\" \"+");
         println("\"match: <<EOF>>\");");
         print("                System.out.println(\"action [" + defaultAction.priority + "] { ");
         print(escapify(defaultAction.content));

@@ -1,6 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * JFlex 1.7.0-1-SNAPSHOT                                                    *
- * Copyright (C) 1998-2015  Gerwin Klein <lsf@jflex.de>                    *
+ * JFlex 1.7.0                                                             *
+ * Copyright (C) 1998-2018  Gerwin Klein <lsf@jflex.de>                    *
  * All rights reserved.                                                    *
  *                                                                         *
  * License: BSD                                                            *
@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
  * <p>[Is not yet used exclusively, but should]
  *
  * @author Gerwin Klein
- * @version JFlex 1.7.0-1-SNAPSHOT
+ * @version JFlex 1.7.0
  */
 public class ErrorMessages {
   private String key;
@@ -34,7 +34,7 @@ public class ErrorMessages {
   }
 
   /**
-   * Returns a localized reprensentation of the error messages.
+   * Returns a localized representation of the error messages.
    *
    * @param msg a {@link jflex.ErrorMessages} object.
    * @return a {@link java.lang.String} representation of the errors.
@@ -51,39 +51,12 @@ public class ErrorMessages {
   }
 
   /**
-   * get.
+   * Returns an error message.
    *
-   * @param msg a {@link jflex.ErrorMessages} object.
-   * @param data a {@link java.lang.String} object.
+   * @param msg a {@link jflex.ErrorMessages} containing the format string.
    * @return a {@link java.lang.String} object.
    */
-  public static String get(ErrorMessages msg, String data) {
-    Object[] args = {data};
-    return MessageFormat.format(get(msg), args);
-  }
-
-  /**
-   * get.
-   *
-   * @param msg a {@link jflex.ErrorMessages} object.
-   * @param data1 a {@link java.lang.String} object.
-   * @param data2 a {@link java.lang.String} object.
-   * @return a {@link java.lang.String} object.
-   */
-  public static String get(ErrorMessages msg, String data1, String data2) {
-    Object[] args = {data1, data2};
-    return MessageFormat.format(get(msg), args);
-  }
-
-  /**
-   * get.
-   *
-   * @param msg a {@link jflex.ErrorMessages} object.
-   * @param data a int.
-   * @return a {@link java.lang.String} object.
-   */
-  public static String get(ErrorMessages msg, int data) {
-    Object[] args = {data};
+  public static String get(ErrorMessages msg, Object... args) {
     return MessageFormat.format(get(msg), args);
   }
 
@@ -92,8 +65,6 @@ public class ErrorMessages {
   public static ErrorMessages UNTERMINATED_STR = new ErrorMessages("UNTERMINATED_STR");
   /** Constant <code>EOF_WO_ACTION</code> */
   public static ErrorMessages EOF_WO_ACTION = new ErrorMessages("EOF_WO_ACTION");
-  /** Constant <code>EOF_SINGLERULE</code> */
-  public static ErrorMessages EOF_SINGLERULE = new ErrorMessages("EOF_SINGLERULE");
   /** Constant <code>UNKNOWN_OPTION</code> */
   public static ErrorMessages UNKNOWN_OPTION = new ErrorMessages("UNKNOWN_OPTION");
   /** Constant <code>UNEXPECTED_CHAR</code> */
@@ -102,8 +73,6 @@ public class ErrorMessages {
   public static ErrorMessages UNEXPECTED_NL = new ErrorMessages("UNEXPECTED_NL");
   /** Constant <code>LEXSTATE_UNDECL</code> */
   public static ErrorMessages LEXSTATE_UNDECL = new ErrorMessages("LEXSTATE_UNDECL");
-  /** Constant <code>STATE_IDENT_EXP</code> */
-  public static ErrorMessages STATE_IDENT_EXP = new ErrorMessages("STATE_IDENT_EXP");
   /** Constant <code>REPEAT_ZERO</code> */
   public static ErrorMessages REPEAT_ZERO = new ErrorMessages("REPEAT_ZERO");
   /** Constant <code>REPEAT_GREATER</code> */
@@ -126,8 +95,6 @@ public class ErrorMessages {
   public static ErrorMessages SYNTAX_ERROR = new ErrorMessages("SYNTAX_ERROR");
   /** Constant <code>NOT_AT_BOL</code> */
   public static ErrorMessages NOT_AT_BOL = new ErrorMessages("NOT_AT_BOL");
-  /** Constant <code>NO_MATCHING_BR</code> */
-  public static ErrorMessages NO_MATCHING_BR = new ErrorMessages("NO_MATCHING_BR");
   /** Constant <code>EOF_IN_ACTION</code> */
   public static ErrorMessages EOF_IN_ACTION = new ErrorMessages("EOF_IN_ACTION");
   /** Constant <code>EOF_IN_COMMENT</code> */
@@ -253,12 +220,13 @@ public class ErrorMessages {
   /** Constant <code>PROPS_ARG_REQUIRES_UNICODE_VERSION</code> */
   public static ErrorMessages PROPS_ARG_REQUIRES_UNICODE_VERSION =
       new ErrorMessages("PROPS_ARG_REQUIRES_UNICODE_VERSION");
-  /** Constant <code>EMITTING_INPUTSTREAM_CTOR</code> */
-  public static ErrorMessages EMITTING_INPUTSTREAM_CTOR =
-      new ErrorMessages("EMITTING_INPUTSTREAM_CTOR");
   /** Constant <code>IMPOSSIBLE_CHARCLASS_RANGE</code> */
   public static ErrorMessages IMPOSSIBLE_CHARCLASS_RANGE =
       new ErrorMessages("IMPOSSIBLE_CHARCLASS_RANGE");
   /** Constant <code>CODEPOINT_OUT_OF_RANGE</code> */
   public static ErrorMessages CODEPOINT_OUT_OF_RANGE = new ErrorMessages("CODEPOINT_OUT_OF_RANGE");
+  /** Constant <code>NO_ENCODING</code> */
+  public static ErrorMessages NO_ENCODING = new ErrorMessages("NO_ENCODING");
+  /** Constant <code>CHARSET_NOT_SUPPORTED</code> */
+  public static ErrorMessages CHARSET_NOT_SUPPORTED = new ErrorMessages("CHARSET_NOT_SUPPORTED");
 }

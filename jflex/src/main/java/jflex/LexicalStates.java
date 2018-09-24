@@ -1,6 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * JFlex 1.7.0-1-SNAPSHOT                                                    *
- * Copyright (C) 1998-2015  Gerwin Klein <lsf@jflex.de>                    *
+ * JFlex 1.7.0                                                             *
+ * Copyright (C) 1998-2018  Gerwin Klein <lsf@jflex.de>                    *
  * All rights reserved.                                                    *
  *                                                                         *
  * License: BSD                                                            *
@@ -19,7 +19,7 @@ import java.util.Set;
  * Simple symbol table, mapping lexical state names to integers.
  *
  * @author Gerwin Klein
- * @version JFlex 1.7.0-1-SNAPSHOT
+ * @version JFlex 1.7.0
  */
 public class LexicalStates {
 
@@ -34,8 +34,8 @@ public class LexicalStates {
 
   /** Constructs a new lexical state symbol table. */
   public LexicalStates() {
-    states = new LinkedHashMap<String, Integer>();
-    inclusive = new ArrayList<Integer>();
+    states = new LinkedHashMap<>();
+    inclusive = new ArrayList<>();
   }
 
   /**

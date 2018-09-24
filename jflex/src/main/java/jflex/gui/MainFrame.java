@@ -1,6 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * JFlex 1.7.0-1-SNAPSHOT                                                    *
- * Copyright (C) 1998-2015  Gerwin Klein <lsf@jflex.de>                    *
+ * JFlex 1.7.0                                                             *
+ * Copyright (C) 1998-2018  Gerwin Klein <lsf@jflex.de>                    *
  * All rights reserved.                                                    *
  *                                                                         *
  * License: BSD                                                            *
@@ -24,7 +24,7 @@ import jflex.Out;
  * JFlex main application frame (GUI mode only)
  *
  * @author Gerwin Klein
- * @version JFlex 1.7.0-1-SNAPSHOT
+ * @version JFlex 1.7.0
  */
 public final class MainFrame extends Frame implements Handles {
 
@@ -37,7 +37,6 @@ public final class MainFrame extends Frame implements Handles {
   private String dirName = "";
 
   private Button quit;
-  private Button options;
   private Button generate;
   private Button stop;
   private Button specChoose;
@@ -73,7 +72,7 @@ public final class MainFrame extends Frame implements Handles {
 
     generate = new Button("Generate");
     quit = new Button("Quit");
-    options = new Button("Options");
+    Button options = new Button("Options");
     stop = new Button("Stop");
     dirChoose = new Button("Browse");
     dir = new TextField(10);

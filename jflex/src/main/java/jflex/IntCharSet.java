@@ -1,6 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * JFlex 1.7.0-1-SNAPSHOT                                                    *
- * Copyright (C) 1998-2015  Gerwin Klein <lsf@jflex.de>                    *
+ * JFlex 1.7.0                                                             *
+ * Copyright (C) 1998-2018  Gerwin Klein <lsf@jflex.de>                    *
  * All rights reserved.                                                    *
  *                                                                         *
  * License: BSD                                                            *
@@ -19,7 +19,7 @@ import jflex.unicode.UnicodeProperties;
  * <p>[fixme: optimizations possible]
  *
  * @author Gerwin Klein
- * @version JFlex 1.7.0-1-SNAPSHOT
+ * @version JFlex 1.7.0
  */
 public final class IntCharSet {
 
@@ -31,7 +31,7 @@ public final class IntCharSet {
 
   /** Constructor for IntCharSet. */
   public IntCharSet() {
-    this.intervals = new ArrayList<Interval>();
+    this.intervals = new ArrayList<>();
   }
 
   /**
@@ -60,7 +60,7 @@ public final class IntCharSet {
    */
   public IntCharSet(List<Interval> chars) {
     int size = chars.size();
-    intervals = new ArrayList<Interval>(size);
+    intervals = new ArrayList<>(size);
 
     for (Interval interval : chars) add(interval);
   }
